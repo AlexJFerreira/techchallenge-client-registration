@@ -15,6 +15,9 @@
     <description>techchallenge-client-registration</description>
     <properties>
         <java.version>21</java.version>
+        <sonar.organization>alexjferreira</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.coverage.exclusions>**/request/*, **/response/*, **/exceptions/*, **/infra/*, **/domain/*, br/com/postech/techchallengeclientregistration/core/domain/**, **/gateway/database/entity/*, br/com/postech/techchallengeclientregistration/Application.class</sonar.coverage.exclusions>
     </properties>
     <dependencies>
         <dependency>
