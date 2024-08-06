@@ -1,9 +1,13 @@
 package br.com.postech.techchallengeclientregistration.adapters.controller.rest;
 
 
+import br.com.postech.techchallengeclientregistration.adapters.controller.rest.request.ClientInactivationRequest;
 import br.com.postech.techchallengeclientregistration.adapters.controller.rest.request.ClientRegistrationRequest;
+import br.com.postech.techchallengeclientregistration.adapters.controller.rest.response.ClientInactivationResponse;
 import br.com.postech.techchallengeclientregistration.adapters.controller.rest.response.ClientResponse;
 import br.com.postech.techchallengeclientregistration.core.domain.entity.Client;
+import br.com.postech.techchallengeclientregistration.core.domain.entity.ClientInactivation;
+import br.com.postech.techchallengeclientregistration.core.usecase.RegisterClientDataInactivationRequestUseCase;
 import br.com.postech.techchallengeclientregistration.core.usecase.RegisterClientUseCase;
 import br.com.postech.techchallengeclientregistration.core.usecase.SearchClientByCpfUseCase;
 import jakarta.validation.Valid;
@@ -26,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ClientController {
 
   private final RegisterClientUseCase registerClientUseCase;
+  private final RegisterClientDataInactivationRequestUseCase registerClientDataInactivationRequestUseCase;
   private final SearchClientByCpfUseCase searchClientByCpfUseCase;
   private final ModelMapper modelMapper;
 
@@ -43,6 +48,15 @@ public class ClientController {
     log.info("Client search request received for cpf {} ", cpf);
     var client = searchClientByCpfUseCase.execute(cpf);
     return modelMapper.map(client, ClientResponse.class);
+  }
+
+  @PostMapping("/inactivation")
+  @ResponseStatus(HttpStatus.CREATED)
+  public ClientInactivationResponse createClientDataInactivationRequest(@Valid @RequestBody final ClientInactivationRequest clientInactivationRequest) {
+    log.info("Client data inactivation request: {} received", clientInactivationRequest);
+    var clientInactivation = modelMapper.map(clientInactivationRequest, ClientInactivation.class);
+    var requestNumber = registerClientDataInactivationRequestUseCase.execute(clientInactivation);
+    return new ClientInactivationResponse(requestNumber);
   }
 
 }
